@@ -153,9 +153,9 @@ const controller = {
             }
         } else {
             //no match case
-            window.setTimeout(function() {
+            window.requestAnimationFrame(function() {
                 controller.closeCards(card);
-            },1000);
+            });
         }
     }
 };
