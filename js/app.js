@@ -1,3 +1,76 @@
+/*
+* @Description a stopwatch class.
+* Credits: https://codepen.io/_Billy_Brown/pen/dbJeh
+*/
+const Stopwatch = function(display) {
+    this.running = false;
+    this.display = display;
+    this.laps = [];
+    this.reset();
+    this.print(this.times);
+};
+
+Stopwatch.prototype.reset = function() {
+    this.times = [ 0, 0, 0 ];
+    this.print();
+};
+
+Stopwatch.prototype.start = function() {
+    if (!this.time) this.time = performance.now();
+    if (!this.running) {
+        this.running = true;
+        requestAnimationFrame(this.step.bind(this));
+    }
+};
+
+Stopwatch.prototype.stop = function() {
+    this.running = false;
+    this.time = null;
+};
+
+Stopwatch.prototype.step = function(timestamp) {
+    if (!this.running) return;
+    this.calculate(timestamp);
+    this.time = timestamp;
+    this.print();
+    requestAnimationFrame(this.step.bind(this));
+};
+
+Stopwatch.prototype.calculate = function(timestamp) {
+    var diff = timestamp - this.time;
+    // Hundredths of a second are 100 ms
+    this.times[2] += diff / 10;
+    // Seconds are 100 hundredths of a second
+    if (this.times[2] >= 100) {
+        this.times[1] += 1;
+        this.times[2] -= 100;
+    }
+    // Minutes are 60 seconds
+    if (this.times[1] >= 60) {
+        this.times[0] += 1;
+        this.times[1] -= 60;
+    }
+};
+
+Stopwatch.prototype.print = function() {
+    this.display.innerText = this.format(this.times);
+};
+
+Stopwatch.prototype.format = function(times) {
+    return `\
+${pad0(times[0], 2)}:\
+${pad0(times[1], 2)}:\
+${pad0(Math.floor(times[2]), 2)}`;
+};
+
+
+function pad0(value, count) {
+    var result = value.toString();
+    for (; result.length < count; --count)
+        result = '0' + result;
+    return result;
+}
+
 const model = {
     /*
     * @description array with all the 16 card objects.
@@ -62,10 +135,12 @@ const controller = {
     * make everything ready to start playing.
     */
     init: function() {
+        this.stopwatch = new Stopwatch(document.querySelector('.stopwatch'));
         let shuffeledCards = this.shuffle(model.createCardObjets());
         let memoryCards = this.getCardsFragment(shuffeledCards);
         //display the cards on the page
-        gameView.displayCards(memoryCards);
+        gameView.init(memoryCards);
+
     },
 
     /*
@@ -163,6 +238,22 @@ const controller = {
 const gameView = {
 
     deck: document.getElementsByClassName('deck')[0],
+
+    init: function(memoryCards) {
+        this.displayCards(memoryCards);
+        let startButton = document.getElementsByClassName('start')[0];
+        let stopButton = document.getElementsByClassName('stop')[0];
+        let resetButton = document.getElementsByClassName('reset')[0];
+        startButton.addEventListener('click', function(){
+            controller.stopwatch.start();
+        });
+        stopButton.addEventListener('click', function(){
+            controller.stopwatch.stop();
+        });
+        resetButton.addEventListener('click', function(){
+            controller.stopwatch.reset();
+        });
+    },
 
     /*
     * @description displays the cards on the page.
