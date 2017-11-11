@@ -93,11 +93,13 @@ h1 {
 
 .score-panel {
     text-align: left;
-    width: 345px;
+    width: 630px;
     margin-bottom: 10px;
 }
 
 .score-panel .stars {
+    color: #ffc107;
+    float: left;
     margin: 0;
     padding: 0;
     display: inline-block;
@@ -107,6 +109,19 @@ h1 {
 .score-panel .stars li {
     list-style: none;
     display: inline-block;
+}
+
+.stopwatch {
+    float: right;
+    padding: 0 50px;
+}
+
+.personal-record {
+    float: right;
+}
+
+.red {
+    color: red;
 }
 
 .score-panel .restart {

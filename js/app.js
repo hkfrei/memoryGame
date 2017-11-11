@@ -5,7 +5,6 @@
 const Stopwatch = function(display) {
     this.running = false;
     this.display = display;
-    this.laps = [];
     this.reset();
     this.print(this.times);
 };
@@ -107,6 +106,9 @@ const model = {
     * @return {array} cards - Array with all the 16 card objects.
     */
     createCardObjets: function() {
+        if(this.cards.length > 0) {
+            this.cards = [];
+        }
         this.symbols.forEach((symbol) => {
             let card = new this.Card(symbol);
             //add 2 cards per symbol
@@ -118,9 +120,22 @@ const model = {
 
 
 const controller = {
+    /*
+    * @description reference to the stars ul list in the dom.
+    */
+    starContainer: document.getElementsByClassName('stars')[0],
 
     /*
-    * @description the currently open card to compare the next
+    * @description reference to the stars inside  the ul list.
+    */
+    stars: document.getElementsByClassName('fa fa-star'),
+    /*
+    * @description number of moves the user has made.
+    */
+    moves: 0,
+
+    /*
+    * @description the currently open card to compare the next.
     * opened card with.
     */
     currentCard: null,
@@ -135,12 +150,89 @@ const controller = {
     * make everything ready to start playing.
     */
     init: function() {
-        this.stopwatch = new Stopwatch(document.querySelector('.stopwatch'));
+        if(! this.stopwatch) {
+            this.stopwatch = new Stopwatch(document.querySelector('.stopwatch'));
+        } else {
+            this.stopwatch.stop();
+            this.stopwatch.reset();
+        }
+        this.resetMoves();
+        this.resetStars();
+        this.finishedCards = [];
         let shuffeledCards = this.shuffle(model.createCardObjets());
         let memoryCards = this.getCardsFragment(shuffeledCards);
         //display the cards on the page
         gameView.init(memoryCards);
 
+    },
+
+    /*
+    * @description increment the move counter by 1.
+    */
+    incrementMoves() {
+        this.moves++;
+        document.getElementsByClassName('moves')[0].innerHTML = this.moves;
+        this.calculateStars();
+    },
+
+    /*
+    * @description Update the stars in the dom based on the number of moves.
+    */
+    calculateStars() {
+        if (this.moves > 12 && this.stars.length > 2 ) {
+            this.starContainer.removeChild(this.starContainer.children[this.starContainer.children.length -1]);
+        }
+        if (this.moves > 17 && this.stars.length === 2 ) {
+            this.starContainer.removeChild(this.starContainer.children[this.starContainer.children.length -1]);
+        }
+        if (this.moves > 23 && this.stars.length === 1 ) {
+            this.starContainer.removeChild(this.starContainer.children[this.starContainer.children.length -1]);
+        }
+    },
+
+    /*
+    * @description reset the move counter to 0 and update the dom.
+    */
+    resetMoves() {
+        this.moves = 0;
+        document.getElementsByClassName('moves')[0].innerHTML = this.moves;
+    },
+
+    /*
+    * @description reset the number of stars to the initial value of 3.
+    */
+    resetStars() {
+        if (this.stars.length !== 3) {
+            this.starContainer.innerHTML = '';
+            for(let i = 0; i < 3; i++) {
+                let star = document.createElement('li');
+                star.classList.add('fa', 'fa-star');
+                this.starContainer.appendChild(star);
+            }
+        }
+    },
+
+    /*
+    * @description if it's a new record, add the current moves and time to localStorage.
+    */
+    addResultToLocaStorage() {
+        let moveRecord = window.localStorage.getItem('moveRecord');
+        if (! moveRecord) {
+            localStorage.setItem('moveRecord', this.moves);
+            localStorage.setItem('timeRecord', this.stopwatch.times);
+        } else {
+            if (moveRecord > this.moves) {
+                localStorage.setItem('moveRecord', this.moves);
+                localStorage.setItem('timeRecord', this.stopwatch.times);
+            }
+        }
+    },
+
+    /*
+    * @description getter for the 16 card objects in the model.
+    */
+    getCards() {
+        return model.cards;
     },
 
     /*
@@ -182,11 +274,21 @@ const controller = {
             //add the click event listener to the card
             li.addEventListener('click', function(e) {
                 controller.showCard(e.target);
+                controller.startTime();
             });
             //add the card to the DocumentFragment
             memoryCards.appendChild(li);
         });
         return memoryCards;
+    },
+
+    /*
+    * @description start the watch if it is running.
+    */
+    startTime: function() {
+        if (!this.stopwatch.running) {
+            this.stopwatch.start();
+        }
     },
 
     /*
@@ -219,12 +321,19 @@ const controller = {
     * @param {domElement} card - the card that was last opened
     */
     compareCards: function(card) {
+        this.incrementMoves();
+        console.log(this.finishedCards.length);
         if (card.dataset.symbol === this.currentCard.dataset.symbol) {
             //match case
             this.finishedCards.push(card, this.currentCard);
             this.currentCard = null;
             if (this.finishedCards.length === 16) {
-                alert('yeeeeh you won!');
+                window.requestAnimationFrame(function(){
+                    controller.stopwatch.stop();
+                    controller.addResultToLocaStorage();
+                    gameView.updateMoveRecord();
+                });
+
             }
         } else {
             //no match case
@@ -236,23 +345,25 @@ const controller = {
 };
 
 const gameView = {
-
+    /*
+    * @description reference to the deck element in the dom.
+    */
     deck: document.getElementsByClassName('deck')[0],
 
+    /*
+    * @description initialize evereything on the page like adding the cards
+    * and register the necessary event listener for the restart button.
+    * @param {DocumentFragment} memoryCards - a DocumentFragment, containig all the cards as html li elements
+    */
     init: function(memoryCards) {
         this.displayCards(memoryCards);
-        let startButton = document.getElementsByClassName('start')[0];
-        let stopButton = document.getElementsByClassName('stop')[0];
-        let resetButton = document.getElementsByClassName('reset')[0];
-        startButton.addEventListener('click', function(){
-            controller.stopwatch.start();
+        let restartButton = document.getElementsByClassName('restart')[0];
+
+        restartButton.addEventListener('click', function(){
+            controller.init();
         });
-        stopButton.addEventListener('click', function(){
-            controller.stopwatch.stop();
-        });
-        resetButton.addEventListener('click', function(){
-            controller.stopwatch.reset();
-        });
+        this.updateMoveRecord();
+
     },
 
     /*
@@ -260,8 +371,28 @@ const gameView = {
     * @param {DocumentFragment} memoryCards - a DocumentFragment, containig all the cards as html li elements
     */
     displayCards: function(memoryCards) {
+        if (this.deck.children.length > 0) {
+            //remove the 'old' cards
+            this.deck.innerHTML = '';
+        }
         this.deck.appendChild(memoryCards);
-    }
+    },
+
+    /*
+    * @description updates the PB section in the dom with the new record.
+    */
+    updateMoveRecord: function() {
+        let moveRecord = window.localStorage.getItem('moveRecord');
+        let timeRecord = window.localStorage.getItem('timeRecord');
+        let personalRecord = document.getElementsByClassName('personal-record')[0];
+        if (!moveRecord) {
+            personalRecord.innerHTML = 'PB: -';
+        } else {
+            timeRecord = timeRecord.split(',');
+            let recordText = 'PB: <span class="red">' + moveRecord + ' Moves</span> in <span class="red">' + timeRecord[0] + ':' + timeRecord[1] + ':' + timeRecord[2].substring(0,4) + '</span>';
+            personalRecord.innerHTML = recordText;
+        }
+    },
 };
 
 
