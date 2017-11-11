@@ -297,6 +297,9 @@ const controller = {
     * @param {domElement} card - a html li (card) element
     */
     showCard: function(card) {
+        if (card.classList.contains('show')){
+            return;
+        }
         card.classList.add('open', 'show');
         if (!this.currentCard) {
             this.currentCard = card;
@@ -322,7 +325,6 @@ const controller = {
     */
     compareCards: function(card) {
         this.incrementMoves();
-        console.log(this.finishedCards.length);
         if (card.dataset.symbol === this.currentCard.dataset.symbol) {
             //match case
             this.finishedCards.push(card, this.currentCard);
@@ -332,6 +334,7 @@ const controller = {
                     controller.stopwatch.stop();
                     controller.addResultToLocaStorage();
                     gameView.updateMoveRecord();
+                    gameView.showModalDialog();
                 });
 
             }
@@ -350,6 +353,8 @@ const gameView = {
     */
     deck: document.getElementsByClassName('deck')[0],
 
+    dialog: new window.mdc.dialog.MDCDialog(document.querySelector('#finish-game-dialog')),
+
     /*
     * @description initialize evereything on the page like adding the cards
     * and register the necessary event listener for the restart button.
@@ -362,6 +367,11 @@ const gameView = {
         restartButton.addEventListener('click', function(){
             controller.init();
         });
+
+        this.dialog.listen('MDCDialog:accept', function() {
+            controller.init();
+        });
+
         this.updateMoveRecord();
 
     },
@@ -376,6 +386,19 @@ const gameView = {
             this.deck.innerHTML = '';
         }
         this.deck.appendChild(memoryCards);
+    },
+
+    /*
+    * @description displays modal dialog when the user finished the game.
+    */
+    showModalDialog: function() {
+        let dialogMoves = document.getElementsByClassName('finish-game-dialog--moves')[0];
+        dialogMoves.innerHTML = controller.moves;
+        let dialogTime = document.getElementsByClassName('finish-game-dialog--time')[0];
+        dialogTime.innerHTML = controller.stopwatch.format(controller.stopwatch.times);
+        let dialogStars = document.getElementsByClassName('finish-game-dialog--starrating')[0];
+        dialogStars.innerHTML = 'Star Rating: ' + controller.stars.length + ' Stars';
+        this.dialog.show();
     },
 
     /*

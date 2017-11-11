@@ -6,6 +6,8 @@
     <meta name="description" content="">
     <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
     <link rel="stylesheet prefetch" href="https://fonts.googleapis.com/css?family=Coda">
+    <link rel="stylesheet" href="node_modules/@material/dialog/dist/mdc.dialog.min.css">
+    <link rel="stylesheet" href="node_modules/@material/button/dist/mdc.button.min.css">
     <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
@@ -26,7 +28,7 @@
         	<span class="moves">0</span> Moves
 
             <div class="restart">
-        		<i class="fa fa-repeat"></i>
+    		<i class="fa fa-repeat"></i>
         	</div>
             <span class="stopwatch"></span><br>
             <span class="personal-record">PB: </span>
@@ -36,6 +38,35 @@
 
     </div>
 
+    <!-- The Modal Dialog to show when the user finished the game -->
+    <aside  id="finish-game-dialog"
+            class="mdc-dialog"
+            role="alertdialog"
+            aria-labelledby="finish-game-dialog-label"
+            aria-describedby="finish-game-dialog-description">
+        <div class="mdc-dialog__surface">
+            <header class="mdc-dialog__header">
+              <h2 id="finish-game-dialog-label" class="mdc-dialog__header__title">
+                Congratulations, You made it!
+              </h2>
+            </header>
+            <section id="finish-game-dialog-description" class="mdc-dialog__body">
+              <div class="finish-game-dialog--movesresult">
+                  You needed: <span class="finish-game-dialog--moves"></span> Moves.
+              </div>
+              <div class="finish-game-dialog--timeresult">
+                  Your time was: <span class="finish-game-dialog--time"></span>
+              </div>
+               <div class="finish-game-dialog--starrating"></div>
+            </section>
+            <footer class="mdc-dialog__footer">
+              <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel">Cancel</button>
+              <button type="button" class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept">New Game</button>
+            </footer>
+        </div>
+        <div class="mdc-dialog__backdrop"></div>
+    </aside>
+    <script src="node_modules/@material/dialog/dist/mdc.dialog.min.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,28 @@
+{
+  "name": "memory-game",
+  "version": "1.0.0",
+  "description": "UDACITY fend-project-memory-game",
+  "main": "js/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hkfrei/memoryGame.git"
+  },
+  "keywords": [
+    "memory",
+    "game",
+    "udacity"
+  ],
+  "author": "Hanskaspar Frei",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hkfrei/memoryGame/issues"
+  },
+  "homepage": "https://github.com/hkfrei/memoryGame#readme",
+  "dependencies": {
+    "@material/button": "^0.24.0",
+    "@material/dialog": "^0.24.0"
+  }
+}
