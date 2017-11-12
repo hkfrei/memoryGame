@@ -1,20 +1,74 @@
-# Memory Game Project
+# MEMORY GAME
 
-## Table of Contents
+A classic Memory Game where you have to find matching cards. 🃏
 
-* [Instructions](#instructions)
-* [Contributing](#contributing)
+## Getting Started
 
-## Instructions
+You can get a local copy of the project by running this command on your console:
+```
+https://github.com/hkfrei/memoryGame.git
+```
+After that, you should have a new directory named "memoryGame". Enter it by typing...
+`cd memoryGame`.
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
 
-To get started, open `js/app.js` and start building out the app's functionality
+### Prerequisites
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
+The project needs the package manager [Node](https://nodejs.org/en/). You can install it from [here](https://nodejs.org/en/)
+
+
+### Installing
+
+While in the newly created folder, install all the dependencies.
+```zsh
+node install
+```
+
+After that, you can start a development server. If you have PHP installed you can type...
+```zsh
+php -S localhost:8000
+```
+Open your Browser at ```http://localhost:8000``` and you are ready to go.
+
+### Instructions
+If you click on a card, it show's it's Symbol. The goal of the game is to open two cards in a row with the same symbol. Do so, until all cards are opened. On the first card click a timer starts and it stops when are cards are opened. The faster you are and the less moves you needed the better the result. 🥇
+
+
+## Running the tests
+
+This project uses eslint to test coding style. You can see the current configuration in *.eslintrc.js*.
+What's special about the current config, is that the UDACITY style checker is installed. Currently *app.js* is beeing linted.
+You can run tests with...
+
+```
+node run lint
+```
+Don't forget, you need to be in the *root* directory to run this command successfully.
+
+## Built With
+
+* [NODE](https://nodejs.org/en/) - Package Management
+* [UDACITY](https://github.com/udacity/fend-project-memory-game) - Starting Template for the Project.
+* [Material Design Components](https://github.com/material-components/material-components-web) layout elements (css and javascript).
 
 ## Contributing
 
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+Of course, this project can be extended.
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
 
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/hkfrei/memoryGame/tags).
+
+## Authors
+
+* **Hanskaspar Frei**
+
+See also the list of [contributors](https://github.com/hkfrei/memoryGame/contributors) who participated in this project.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+## Acknowledgments
+* [UDACITY](https://www.udacity.com) for the starter Project.
