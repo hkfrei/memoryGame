@@ -21,7 +21,7 @@ The project needs the package manager [Node](https://nodejs.org/en/). You can in
 
 While in the newly created folder, install all the dependencies.
 ```zsh
-node install
+npm install
 ```
 
 After that, you can start a development server. If you have PHP installed you can type...
@@ -42,7 +42,7 @@ Please refer to [https://www.npmjs.com/package/eslint-config-udacity](https://ww
 You can run tests with...
 
 ```
-node run lint
+npm run lint
 ```
 Don't forget, you need to be in the *root* directory to run this command successfully.
 
