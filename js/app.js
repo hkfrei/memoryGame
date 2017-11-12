@@ -128,7 +128,8 @@ const controller = {
     /*
     * @description reference to the stars inside  the ul list.
     */
-    stars: document.getElementsByClassName('fa fa-star'),
+    stars: 3,
+
     /*
     * @description number of moves the user has made.
     */
@@ -167,26 +168,42 @@ const controller = {
     },
 
     /*
+    * @description create a star rating string with <i> elements
+    * and a font-awesome star.
+    * @return {string} starString - a star rating string to add to a dom element.
+    */
+    getStars: function() {
+        let starString = '';
+        for(let i = 0; i < this.stars; i++) {
+            starString += ' <i class="fa fa-star yellow"></i> ';
+        }
+        return starString;
+    },
+
+    /*
     * @description increment the move counter by 1.
     */
     incrementMoves() {
         this.moves++;
         document.getElementsByClassName('moves')[0].innerHTML = this.moves;
-        this.calculateStars();
+        this.drawStars();
     },
 
     /*
     * @description Update the stars in the dom based on the number of moves.
     */
-    calculateStars() {
-        if (this.moves > 12 && this.stars.length > 2 ) {
-            this.starContainer.removeChild(this.starContainer.children[this.starContainer.children.length -1]);
+    drawStars() {
+        if (this.moves > 12 && this.stars === 3 ) {
+            --this.stars;
+            this.starContainer.innerHTML = this.getStars();
         }
-        if (this.moves > 17 && this.stars.length === 2 ) {
-            this.starContainer.removeChild(this.starContainer.children[this.starContainer.children.length -1]);
+        if (this.moves > 17 && this.stars === 2 ) {
+            --this.stars;
+            this.starContainer.innerHTML = this.getStars();
         }
-        if (this.moves > 23 && this.stars.length === 1 ) {
-            this.starContainer.removeChild(this.starContainer.children[this.starContainer.children.length -1]);
+        if (this.moves > 23 && this.stars === 1 ) {
+            --this.stars;
+            this.starContainer.innerHTML = this.getStars();
         }
     },
 
@@ -202,13 +219,14 @@ const controller = {
     * @description reset the number of stars to the initial value of 3.
     */
     resetStars() {
-        if (this.stars.length !== 3) {
+        if (this.stars !== 3) {
             this.starContainer.innerHTML = '';
             for(let i = 0; i < 3; i++) {
                 let star = document.createElement('li');
-                star.classList.add('fa', 'fa-star');
+                star.classList.add('fa', 'fa-star', 'yellow');
                 this.starContainer.appendChild(star);
             }
+            this.stars = 3;
         }
     },
 
@@ -222,12 +240,12 @@ const controller = {
             localStorage.setItem('timeRecord', this.stopwatch.times);
         } else {
             if (moveRecord > this.moves) {
+                // last game was a new PB
                 localStorage.setItem('moveRecord', this.moves);
                 localStorage.setItem('timeRecord', this.stopwatch.times);
             }
         }
     },
-
     /*
     * @description getter for the 16 card objects in the model.
     */
@@ -355,6 +373,14 @@ const gameView = {
 
     dialog: new window.mdc.dialog.MDCDialog(document.querySelector('#finish-game-dialog')),
 
+    finishGameDialogPb: document.getElementsByClassName('finish-game-dialog--pb')[0],
+
+    finishGameDialogMoves:  document.getElementsByClassName('finish-game-dialog--moves')[0],
+
+    finishGameDialogTime: document.getElementsByClassName('finish-game-dialog--time')[0],
+
+    finishGameDialogStars: document.getElementsByClassName('finish-game-dialog--starrating')[0],
+
     /*
     * @description initialize evereything on the page like adding the cards
     * and register the necessary event listener for the restart button.
@@ -362,6 +388,7 @@ const gameView = {
     */
     init: function(memoryCards) {
         this.displayCards(memoryCards);
+        this.resetModalDialogText();
         let restartButton = document.getElementsByClassName('restart')[0];
 
         restartButton.addEventListener('click', function(){
@@ -374,6 +401,14 @@ const gameView = {
 
         this.updateMoveRecord();
 
+    },
+
+    /*
+    * @description reset the modal dialog pb section, because it's not sure
+    * the next round is a PB.
+    */
+    resetModalDialogText: function() {
+        this.finishGameDialogPb.innerHTML = '';
     },
 
     /*
@@ -392,12 +427,13 @@ const gameView = {
     * @description displays modal dialog when the user finished the game.
     */
     showModalDialog: function() {
-        let dialogMoves = document.getElementsByClassName('finish-game-dialog--moves')[0];
-        dialogMoves.innerHTML = controller.moves;
-        let dialogTime = document.getElementsByClassName('finish-game-dialog--time')[0];
-        dialogTime.innerHTML = controller.stopwatch.format(controller.stopwatch.times);
-        let dialogStars = document.getElementsByClassName('finish-game-dialog--starrating')[0];
-        dialogStars.innerHTML = 'Star Rating: ' + controller.stars.length + ' Stars';
+        let moveRecord = window.localStorage.getItem('moveRecord');
+        if (moveRecord >= controller.moves) {
+            this.finishGameDialogPb.innerHTML = '<h3>👏 YOU MADE A NEW RECORD, AWESOME! 🥇</h3>';
+        }
+        this.finishGameDialogMoves.innerHTML = controller.moves;
+        this.finishGameDialogTime.innerHTML = controller.stopwatch.format(controller.stopwatch.times);
+        this.finishGameDialogStars.innerHTML = 'Star Rating: ' + controller.stars + ' Stars' + controller.getStars();
         this.dialog.show();
     },
 
