@@ -1,12 +1,12 @@
 # MEMORY GAME
 
-A classic Memory Game where you have to find matching cards. 🃏
+A classic Memory Game. 🃏 Find the matching cards. 🃏
 
 ## Getting Started
 
 You can get a local copy of the project by running this command on your console:
 ```
-https://github.com/hkfrei/memoryGame.git
+git clone https://github.com/hkfrei/memoryGame.git
 ```
 After that, you should have a new directory named "memoryGame". Enter it by typing...
 `cd memoryGame`.
@@ -28,10 +28,10 @@ After that, you can start a development server. If you have PHP installed you ca
 ```zsh
 php -S localhost:8000
 ```
-Open your Browser at ```http://localhost:8000``` and you are ready to go.
+Open your Browser at `http://localhost:8000` and you are ready to go.
 
 ### Instructions
-If you click on a card, it show's it's Symbol. The goal of the game is to open two cards in a row with the same symbol. Do so, until all cards are opened. On the first card click a timer starts and it stops when are cards are opened. The faster you are and the less moves you needed the better the result. 🥇
+If you click on a card, it show's it's Symbol. The goal of the game is to open two cards in a row with the same symbol. If the Symbols do not match, the Cards close and you have to memory the symbol in your head for a later try. Do so, until all cards are opened. On the first card click a timer starts. It stops, when are cards are opened. The faster you are and the less moves you need, the better the result. 🥇
 
 
 ## Running the tests
