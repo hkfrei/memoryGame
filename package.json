@@ -4,7 +4,8 @@
   "description": "UDACITY fend-project-memory-game",
   "main": "js/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint \"./js/app.js\""
   },
   "repository": {
     "type": "git",
@@ -24,5 +25,10 @@
   "dependencies": {
     "@material/button": "^0.24.0",
     "@material/dialog": "^0.24.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.11.0",
+    "eslint-config-udacity": "^2.0.2",
+    "eslint-plugin-import": "^2.8.0"
   }
 }

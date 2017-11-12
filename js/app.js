@@ -10,7 +10,7 @@ const Stopwatch = function(display) {
 };
 
 Stopwatch.prototype.reset = function() {
-    this.times = [ 0, 0, 0 ];
+    this.times = [0, 0, 0];
     this.print();
 };
 

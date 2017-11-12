@@ -38,6 +38,7 @@ If you click on a card, it show's it's Symbol. The goal of the game is to open t
 
 This project uses eslint to test coding style. You can see the current configuration in *.eslintrc.js*.
 What's special about the current config, is that the UDACITY style checker is installed. Currently *app.js* is beeing linted.
+Please refer to [https://www.npmjs.com/package/eslint-config-udacity](https://www.npmjs.com/package/eslint-config-udacity) for installation instructions.
 You can run tests with...
 
 ```
