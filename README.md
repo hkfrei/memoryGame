@@ -30,7 +30,7 @@ php -S localhost:8000
 ```
 Open your Browser at `http://localhost:8000` and you are ready to go.
 
-### Instructions
+### Start playing...
 If you click on a card, it show's it's Symbol. The goal of the game is to open two cards in a row with the same symbol. If the Symbols do not match, the Cards close and you have to memory the symbol in your head for a later try. Do so, until all cards are opened. On the first card click a timer starts. It stops, when are cards are opened. The faster you are and the less moves you need, the better the result. 🥇
 
 
