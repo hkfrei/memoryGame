@@ -301,6 +301,10 @@ const controller = {
     * @description start the watch if it is running.
     */
     startTime: function() {
+        // Dont't start the watch when all cards are opened
+        if (this.finishedCards.length === 16) {
+            return;
+        }
         if (!this.stopwatch.running) {
             this.stopwatch.start();
         }
