@@ -289,6 +289,7 @@ const controller = {
             li.addEventListener('click', function(e) {
                 controller.showCard(e.target);
                 controller.startTime();
+
             });
             //add the card to the DocumentFragment
             memoryCards.appendChild(li);
@@ -311,7 +312,12 @@ const controller = {
     * @param {domElement} card - a html li (card) element
     */
     showCard: function(card) {
-        if (card.classList.contains('show')){
+        // make sure, the card is not allready open
+        // and only 'LI' elements are delivered to the
+        // showCard function. This prevents a move update,
+        // when the same card is clicked over and over again.
+        if (card.classList.contains('show') ||
+            card.nodeName !== 'LI'){
             return;
         }
         card.classList.add('open', 'show');
