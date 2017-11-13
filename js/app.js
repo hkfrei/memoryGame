@@ -201,10 +201,6 @@ const controller = {
             --this.stars;
             this.starContainer.innerHTML = this.getStars();
         }
-        if (this.moves > 23 && this.stars === 1 ) {
-            --this.stars;
-            this.starContainer.innerHTML = this.getStars();
-        }
     },
 
     /*
